@@ -8,6 +8,10 @@ import { PostModule } from './post/post.module';
 import { CommentsModule } from './comments/comments.module';
 import { LikeModule } from './like/like.module';
 import { AuthModule } from './auth/auth.module';
+import { User } from './user/user.entity';
+import { Post } from './post/post.entity';
+import { Comments } from './comments/comments.entity';
+import { Like } from './like/like.entity';
 
 @Module({
   imports: [ConfigModule.forRoot(), 
@@ -15,7 +19,8 @@ import { AuthModule } from './auth/auth.module';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       autoLoadEntities: true,
-      synchronize: true
+      synchronize: true,
+      entities: [User, Post, Comments, Like]
     }),
     UserModule,
     PostModule,

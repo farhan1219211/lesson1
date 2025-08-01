@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -6,6 +6,7 @@ import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateLoginDto } from './dto/create-login.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
 
 
 @Injectable()
@@ -55,9 +56,15 @@ export class UserService {
         if(!user){
             throw new BadRequestException("User not found");
         }
-        return user.user_id;
+        return user;
     }
 
+    // Get all USERS data
+    async getAllUsers(): Promise<User[]> {
+        return await this.userRepository.find({
+            select: ['user_id', 'name', 'email', 'role', 'status']  
+        });
+    }   
     // Get All Data of User
     async profile(email: string){
         const user = await this.userRepository.findOneBy({email});
@@ -69,5 +76,33 @@ export class UserService {
             "status": user?.status
         }
     }
+
+    // Delete User From Database
+    async getUserByEmail(email: string): Promise<any> {
+        return await this.userRepository.findOne({ where: { email } });
+    }
+
+    async deleteUser(email: any): Promise<{ message: string }> {
+        const user = await this.userRepository.findOne({ where: { email } });
+
+        if (!user) {
+            throw new BadRequestException('User not found');
+        }
+
+        await this.userRepository.remove(user);
+        return { message: 'User deleted successfully' };
+    }
+
+    async findUserByName(name: string) {
+        const user = await this.userRepository.findOne({ where: { name } });
+        if (!user) {
+            throw new NotFoundException(`User with name "${name}" not found`);
+        }
+    return {
+        "name": user.name,
+        "role": user.role,
+        "status": user.status
+    };
+}
 
 }

@@ -1,5 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from "typeorm";
 import { IsEmail } from "class-validator";
+import { Post } from "src/post/post.entity";
+import { Like } from "src/like/like.entity";
+import { Comments } from "src/comments/comments.entity";
 
 // Two possible roles (admin, user)
 export enum UserRole {
@@ -34,4 +37,13 @@ export class User{
 
     @Column({type: "enum", enum: UserStatus})
     status: UserStatus;
+
+    @OneToMany(() => Post, post => post.author)
+    posts: Post[];
+
+    @OneToMany(() => Comments, comment => comment.author)
+    comments: Comment[];
+
+    @OneToMany(() => Like, like => like.likedBy)
+    likes: Like[];
 }

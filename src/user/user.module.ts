@@ -9,6 +9,6 @@ import { Like } from 'src/like/like.entity';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService]
+  exports: [UserService, TypeOrmModule]
 })
 export class UserModule {}

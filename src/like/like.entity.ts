@@ -7,15 +7,14 @@ export class Like{
     @PrimaryGeneratedColumn()
     like_id: number
 
-    @Column()
-    content: string
+    // @Column()
+    // content: string
 
-    @ManyToMany(()=>Post)
-    @JoinTable()
-    post: Post[]
 
-    @ManyToMany(()=> User)
-    @JoinTable()
-    likedBy: User[];
+    @ManyToOne(() => Post, post => post.likes)
+    post: Post;
+
+    @ManyToOne(() => User, user => user.likes)
+    likedBy: User;
 
 }
