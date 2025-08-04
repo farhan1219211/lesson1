@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { LikeService } from './like.service';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { Role } from 'src/guards/role/roles.enum';
+import { Roles } from 'src/guards/role/roles.decorator';
 
 
 @Controller('like')
@@ -9,6 +11,7 @@ export class LikeController {
 
     
   @UseGuards(AuthGuard)
+  @Roles(Role.Admin, Role.User)
   @Post('id/:postId')
   async likePost(@Param('postId') postId: number, @Request() req) {
     const user = req.user;

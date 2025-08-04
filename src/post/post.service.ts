@@ -43,5 +43,21 @@ export class PostService {
         return likedPosts;
     }
 
+    async getMyPostsWithStats(userId: number) {
+        const posts = await this.postRepository.find({
+            where: { author: { user_id: userId } },
+            relations: ['likes', 'comments'],
+        });
+
+        return posts.map(post => ({
+            id: post.post_id,
+            title: post.title,
+            content: post.content,
+            likeCount: post.likes.length,
+            commentCount: post.comments.length,
+        }));
+}
+
+
 
 }

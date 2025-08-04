@@ -50,8 +50,7 @@ export class AuthController {
 
     @Get('user-by-name/:name')
     @UseGuards(RoleGuard) 
-    @Roles(Role.Admin)
-    @Roles(Role.User)
+    @Roles(Role.Admin, Role.User)
     async getUserByName(@Param('name') name: string) {
         return this.authService.findUserByName(name);
     }
